@@ -13,3 +13,8 @@ E:\Mestrado\WebMedia\programa\GeneticAlgorithm\bin\Debug\GeneticAlgorithm.pdb
 E:\Mestrado\WebMedia\programa\GeneticAlgorithm\obj\Debug\GeneticAlgorithm.csprojResolveAssemblyReference.cache
 E:\Mestrado\WebMedia\programa\GeneticAlgorithm\obj\Debug\GeneticAlgorithm.dll
 E:\Mestrado\WebMedia\programa\GeneticAlgorithm\obj\Debug\GeneticAlgorithm.pdb
+C:\Users\Bruno\Desktop\novo codigo\RecSys\GeneticAlgorithm\bin\Debug\GeneticAlgorithm.dll
+C:\Users\Bruno\Desktop\novo codigo\RecSys\GeneticAlgorithm\bin\Debug\GeneticAlgorithm.pdb
+C:\Users\Bruno\Desktop\novo codigo\RecSys\GeneticAlgorithm\obj\Debug\GeneticAlgorithm.csprojResolveAssemblyReference.cache
+C:\Users\Bruno\Desktop\novo codigo\RecSys\GeneticAlgorithm\obj\Debug\GeneticAlgorithm.dll
+C:\Users\Bruno\Desktop\novo codigo\RecSys\GeneticAlgorithm\obj\Debug\GeneticAlgorithm.pdb

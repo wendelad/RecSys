@@ -94,6 +94,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ensemble.cs" />
     <Compile Include="Evaluation.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
