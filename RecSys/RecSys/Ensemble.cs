@@ -11,7 +11,8 @@ using MyMediaLite.Eval;
 using MyMediaLite.IO;
 using MyMediaLite.ItemRecommendation;
 using MyMediaLite.Eval.Measures;
-
+using GAF;
+using GAF.Operators;
 
 namespace MyEnsembleLite
 {
