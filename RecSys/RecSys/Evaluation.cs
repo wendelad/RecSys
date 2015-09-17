@@ -18,9 +18,20 @@ namespace RecSys
     class Evaluation
     {
         protected List<IRecommender> m_recommenders;
-        public Evaluation(List<IRecommender> recommenders)
+
+        protected Ensemble m_ensemble;
+
+        protected List<IPosOnlyFeedback> m_test_probe_data;
+        protected List<IPosOnlyFeedback> m_training_probe_data;
+
+        public Evaluation(List<IRecommender> recommenders, List<IPosOnlyFeedback> test_probe_data,
+            List<IPosOnlyFeedback> training_probe_data)
         {
             m_recommenders = recommenders;
+            m_test_probe_data = test_probe_data;
+            m_training_probe_data = training_probe_data;
+            m_ensemble = new Ensemble(m_recommenders);
+            
         }
 
 
@@ -152,7 +163,7 @@ namespace RecSys
                 for (int i = 0; i < m_recommenders.Count + 3; i++) // +Ensemble +GA
                 {
 
-                    int best = best_alg[original];
+                    int best = m_ensemble.best_alg[original];
 
                     IList<int> prediction_list = null;
                     int prediction_count = 0;
@@ -166,7 +177,7 @@ namespace RecSys
                     }
                     else if (i == list_of_predictions.Count + 1)//emsemble
                     {
-                        var prediction_ensemble = Ensenble(list_of_predictions);
+                        var prediction_ensemble = m_ensemble.Ensenble(list_of_predictions);
 
                         prediction_list = (from t in prediction_ensemble select t.Key).ToArray();
                         prediction_count = prediction_ensemble.Count;
@@ -174,10 +185,10 @@ namespace RecSys
                     else if (i == list_of_predictions.Count + 2)//GA
                     {
                         //Set global so Fitness itens can see.
-                        list_prediction_probes = list_of_predictions;
-                        correct_items_global = correct_items;
+                        m_ensemble.list_prediction_probes = list_of_predictions;
+                        m_ensemble.correct_items_global = correct_items;
 
-                        var prediction_ensemble = EnsenblePeso(ga_weights[original].ToArray());
+                        var prediction_ensemble = m_ensemble.EnsenblePeso(m_ensemble.ga_weights[original].ToArray());
 
                         prediction_list = (from t in prediction_ensemble select t.Key).ToArray();
                         prediction_count = prediction_ensemble.Count;
@@ -240,6 +251,13 @@ namespace RecSys
             }
 
             return result;
+        }
+
+
+        public void EvaluateProbe(List<IList<int>> test_users, List<IMapping> user_mapping,
+            List<IMapping> item_mapping, int n = -1)
+        {
+            m_ensemble.EvaluateProbe(m_test_probe_data, m_training_probe_data, test_users, user_mapping, item_mapping);
         }
 
 

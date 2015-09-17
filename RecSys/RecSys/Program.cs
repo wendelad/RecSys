@@ -34,7 +34,7 @@ namespace RecSys
 
 		List<IList<int>> test_users = new List<IList<int>>();
 
-		Dictionary<string, int> best_alg = new Dictionary<string, int>();
+		
 
 		// ID mapping objects
 		protected List<IMapping> user_mapping = new List<IMapping>();
@@ -56,11 +56,9 @@ namespace RecSys
 		protected string measures;
 
 
-		//List of prediction probes
-		List<IList<Tuple<int, float>>> list_prediction_probes = new List<IList<Tuple<int, float>>>();
-		HashSet<int> correct_items_global = new HashSet<int>();
 
-		Dictionary<string, List<double>> ga_weights = new Dictionary<string, List<double>>();
+
+
 
 
 
@@ -206,11 +204,11 @@ files:
 
 			}
 
+            Evaluation evaluation = new Evaluation(recommenders, test_probe_data, training_probe_data);
 
-
-			//Probe learn
-			Console.WriteLine("Probe learn started");
-			TimeSpan time_span = Wrap.MeasureTime(delegate () { EvaluateProbe(); });
+            //Probe learn
+            Console.WriteLine("Probe learn started");
+			TimeSpan time_span = Wrap.MeasureTime(delegate () { evaluation.EvaluateProbe(test_users, user_mapping, item_mapping); });
 			Console.WriteLine(" Probe learn time: " + time_span);
 
 
@@ -254,7 +252,7 @@ files:
 
 			}
 
-            Evaluation evaluation = new Evaluation(recommenders);
+            
 
 			var results = evaluation.Evaluate(test_data,training_data,test_users,user_mapping,item_mapping);
 

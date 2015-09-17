@@ -14,16 +14,31 @@ using MyMediaLite.Eval.Measures;
 using GAF;
 using GAF.Operators;
 
-namespace MyEnsembleLite
+namespace RecSys
 {
     class Ensemble
     {
+        //List of prediction probes
+        public List<IList<Tuple<int, float>>> list_prediction_probes = new List<IList<Tuple<int, float>>>();
+        public HashSet<int> correct_items_global = new HashSet<int>();
+
+        //Used in bestofall ensemble
+        public Dictionary<string, int> best_alg = new Dictionary<string, int>();
+
+        //Used in GA ensemble
+        public Dictionary<string, List<double>> ga_weights = new Dictionary<string, List<double>>();
 
 
+        //List of recommenders
+        protected List<IRecommender> m_recommenders;
 
+        //constructor 
+        public Ensemble(List<IRecommender> recommenders)
+        {
+            m_recommenders = recommenders;
+        }
 
-
-        private List<KeyValuePair<int, float>> Ensenble(List<IList<Tuple<int, float>>> list)
+        public List<KeyValuePair<int, float>> Ensenble(List<IList<Tuple<int, float>>> list)
         {
             var novaList = new Dictionary<int, float>();
 
@@ -66,7 +81,7 @@ namespace MyEnsembleLite
         }
 
         //Usado no 
-        private List<KeyValuePair<int, float>> EnsenblePeso(double[] pesos)
+        public List<KeyValuePair<int, float>> EnsenblePeso(double[] pesos)
         {
             var novaList = new Dictionary<int, float>();
 
@@ -148,7 +163,8 @@ namespace MyEnsembleLite
 
 
 
-        public void EvaluateProbe(
+        public void EvaluateProbe(List<IPosOnlyFeedback> test_probe_data, List<IPosOnlyFeedback> training_probe_data, List<IList<int>> test_users, List<IMapping> user_mapping,
+            List<IMapping> item_mapping,
          int n = -1)
         {
             List<IList<int>> candidate_items = new List<IList<int>>();
@@ -158,7 +174,7 @@ namespace MyEnsembleLite
 
 
 
-            for (int i = 0; i < recommenders.Count; i++)
+            for (int i = 0; i < m_recommenders.Count; i++)
             {
 
                 candidate_items.Add(new List<int>(test_probe_data[i].AllItems.Union(training_probe_data[i].AllItems)));
@@ -202,7 +218,7 @@ namespace MyEnsembleLite
                 correct_items.IntersectWith(candidate_items[0]);
 
 
-                for (int i = 0; i < recommenders.Count; i++)
+                for (int i = 0; i < m_recommenders.Count; i++)
                 {
 
                     int internalId = user_mapping[i].ToInternalID(original);
@@ -226,7 +242,7 @@ namespace MyEnsembleLite
                     //Recomenda
 
 
-                    var listaRecomendacao = recommenders[i].Recommend(user_id, candidate_items: candidate_items[i], n: n, ignore_items: ignore_items_for_this_user[i]);
+                    var listaRecomendacao = m_recommenders[i].Recommend(user_id, candidate_items: candidate_items[i], n: n, ignore_items: ignore_items_for_this_user[i]);
                     for (int j = 0; j < listaRecomendacao.Count; j++)
                     {
                         string idOriginal = item_mapping[i].ToOriginalID(listaRecomendacao[j].Item1);
