@@ -170,11 +170,18 @@ namespace RecSys
 
                         }
                     }
-
-
-                    Console.ReadKey();
+                    DirectoryInfo dir = new DirectoryInfo(@"C:\Users\smart\Downloads\kfolds");
+                    string destinoTest = @"C:\Users\smart\Downloads\kfolds\kfold-pasta-"+num+"\\test" + num + ".txt";
+                    string destinoTraining = @"C:\Users\smart\Downloads\kfolds\kfold-pasta-" + num + "\\training" + num + ".txt";
+                    foreach (FileInfo f in dir.GetFiles("test" + num + ".txt"))
+                        File.Move(@"C:\Users\smart\Downloads\kfolds\test" + num + ".txt", destinoTest);
+                    foreach (FileInfo f in dir.GetFiles("training" + num + ".txt"))
+                        File.Move(@"C:\Users\smart\Downloads\kfolds\training" + num + ".txt", destinoTraining);
+                    
 
                 }
+
+
 
             }
         }
