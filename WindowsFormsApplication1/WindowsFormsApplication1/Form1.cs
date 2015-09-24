@@ -26,10 +26,14 @@ namespace WindowsFormsApplication1
 
     public partial class Form1 : Form
     {
-        private string strPathFile = @"C:\Users\ide\Downloads\ArquivoExemplo.dat_saida";
-        public  double contador3;
+        private string strPathFile = @"C:\Users\smart\Downloads\ArquivoExemplo.dat_saida";
+        const string destinationFileName = @"C:\Users\smart\Downloads\kfolds\Kfold-parte-{0}.txt";
+        const string destinationFileNamepasta = @"C:\Users\smart\Downloads\kfolds\Kfold-pasta-{0}";
+        public double contador3;
+        public int linhasporarquivo = 0;
+        public Boolean cb_marcado;
         private static int contador1;
-        public int contadorporcento=0;
+        public int contadorporcento = 0;
         public int flag = 0;
         public Form1()
         {
@@ -174,7 +178,29 @@ namespace WindowsFormsApplication1
                         //Uso o método Write para escrever o arquivo que será adicionado no arquivo texto
 
 
-                        sw.Write("\r\nTexto adicionado ao final do arquivo1");
+                        string diretorio = @"C:\Users\smart\Downloads\kfolds";
+
+                        String[] listaDeArquivos = Directory.GetFiles(diretorio);
+
+                        if (listaDeArquivos.Length > 0)
+                        {
+                            string caminhoArquivoDestino = @"C:\Users\smart\Downloads\kfolds\saida.txt";
+
+                            FileStream arquivoDestino = File.Open(caminhoArquivoDestino, FileMode.OpenOrCreate);
+                            arquivoDestino.Close();
+
+                            List<String> linhasDestino = new List<string>();
+
+                            foreach (String caminhoArquivo in listaDeArquivos)
+                            {
+                                linhasDestino.AddRange(File.ReadAllLines(caminhoArquivo));
+                            }
+
+                            File.WriteAllLines(caminhoArquivoDestino, linhasDestino.ToArray());
+                        }
+
+
+                        //  sw.Write("\r\nTexto adicionado ao final do arquivo1");
 
 
 
@@ -265,7 +291,6 @@ namespace WindowsFormsApplication1
                                 using (StreamWriter sw = new StreamWriter(fsTmp))
 
                                 {
-                                  
 
                                     if (flag != 1)
                                     {
@@ -279,74 +304,58 @@ namespace WindowsFormsApplication1
                                         }
                                         flag = 1;
                                         contador1 = contador;
-                                       
+
                                     }
 
-                                    contador3 = (contador1 * 0.2);
-                                    contadorporcento = (contador1 * 20) / 100;
+                                    int valorNum1 = int.Parse(textBox1.Text);
+                                    linhasporarquivo = valorNum1;
 
+                                    linhasporarquivo = contador1 / linhasporarquivo;
 
-
-                                    //   int[] vetor = new int[contadorporcento];
-
-                                    List<int> lista = new List<int>();
-                                    Random rnd = new Random(DateTime.Now.Millisecond);
-                                    int numero1=1;
-
-                                    int i = 0;
-                                    while( i < contadorporcento)
+                                    using (var sourcefile = new StreamReader(strPathFile))
                                     {
+
+                                        var fileCounter = 0;
+                                        var destinationFile = new StreamWriter(string.Format(destinationFileName, fileCounter + 1));
+                                      //var destino=  Directory.CreateDirectory(string.Format(destinationFileNamepasta, fileCounter + 1));
                                         
-                                       numero1 = rnd.Next(1, contadorporcento+1);
-                                       if (!lista.Contains(numero1))
+                                        try
                                         {
-                                            
-                                            lista.Add(numero1);
-                                            i++;
-                                        }
-
-                                    }
-
-                                
-
-                                    lista.Sort();
-                                    
-                                    int linhaAtual = 1;
-                                    int totalExcluido = 0;
-                                    int cont = 0;
-                                    int linhaquedeveserdeletada = lista[cont];
-
-                                    fs.Seek(0, SeekOrigin.Begin);
-                                    while (!sr.EndOfStream)
-                                    {
-                                       
-                                        if (totalExcluido<contadorporcento && linhaAtual == linhaquedeveserdeletada)
-                                        {
-                                            string linha = sr.ReadLine();
-                                            totalExcluido++;
-                                            if (totalExcluido != contador3)
+                                            var lineCounter = 0;
+                                            string line;
+                                            while ((line = sr.ReadLine()) != null)
                                             {
-                                               
-                                                cont++;
-                                                linhaquedeveserdeletada = lista[cont];
-                                            }
+                                                if (lineCounter >= linhasporarquivo)
+                                                {
+                                                    //sim.. hora de mudar de arquivo
+                                                    lineCounter = 0;
+                                                    fileCounter++;
+                                                    destinationFile.Dispose();
                                             
+                                                    destinationFile = new StreamWriter(string.Format(destinationFileName, fileCounter + 1));
+                                                  //   destino = Directory.CreateDirectory(string.Format(destinationFileNamepasta, fileCounter + 1));
+
+                                                }
+                                                destinationFile.WriteLine(line);
+                                                lineCounter++;
+
+
+                                            }
                                         }
-                                        else
+                                        finally
                                         {
-                                            sw.Write(sr.ReadLine() + Environment.NewLine);
-                                            linhaAtual++;
-
+                                            destinationFile.Dispose();
                                         }
-
-                                       
                                     }
-                                
+
+
+
+
                                 }
                             }
                         }
                     }
-                     
+
 
 
 
@@ -464,7 +473,16 @@ namespace WindowsFormsApplication1
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
+            if (checkBox1.Checked)
+            {
 
+                cb_marcado = true;
+
+            }
+            else
+            {
+                cb_marcado = false;
+            }
         }
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
@@ -475,6 +493,188 @@ namespace WindowsFormsApplication1
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            //  int valorNum1 = int.Parse(textBox1.Text);
+            //linhasporarquivo = valorNum1;
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            gerartraining();
+        }
+        private void gerartraining()
+
+        {
+
+            try
+
+            {
+
+                //Verifico se o arquivo que desejo abrir existe e passo como parâmetro a respectiva variável
+
+                if (File.Exists(strPathFile))
+
+                {
+
+                    //Crio um using, dentro dele instancio o StreamWriter, uso a classe File e o método
+
+                    //AppendText para concatenar o texto, passando como parâmetro a variável strPathFile
+
+                    using (StreamWriter sw = File.AppendText(strPathFile))
+
+                    {
+
+                        //Uso o método Write para escrever o arquivo que será adicionado no arquivo texto
+
+                        const string destinationFileName1 = @"C:\smart\smart\Downloads\kfolds\training-parte-{0}.txt";
+                        string diretorio = @"C:\Users\smart\Downloads\kfolds";
+
+                        int quantidadearquivos = int.Parse(textBox1.Text);
+                        String[] listaDeArquivos = Directory.GetFiles(diretorio);
+
+
+                        if (listaDeArquivos.Length > 0)
+                        {
+
+                            //  1 2 3 4 5 6 7 8 9 10
+                            string caminhoArquivoDestino = @"C:\Users\smart\Downloads\kfolds\training.txt";
+                            int j, k;
+
+
+                            FileStream arquivoDestino = File.Open(caminhoArquivoDestino, FileMode.OpenOrCreate);
+                            arquivoDestino.Close();
+
+                            List<String> linhasDestino = new List<string>();
+                            String caminhoArquivo;
+
+                            int quantidadekfold = int.Parse(textBox1.Text);
+
+
+                            double oitentaporcento = quantidadekfold * 0.8;
+                            
+                            for (int i = 0; i < oitentaporcento; i++) { 
+                                    for (j = i; j < oitentaporcento; j++)
+                                    {
+
+                                    using (var sourcefile = new StreamReader(strPathFile))
+                                    {
+
+                                        var fileCounter = 0;
+                                        var destinationFile = new StreamWriter(string.Format(destinationFileName1, fileCounter + 1));
+                                        try
+                                        {
+                                            var lineCounter = 0;
+                                            string line;
+                                          
+                                                if (lineCounter >= linhasporarquivo)
+                                                {
+                                                    //sim.. hora de mudar de arquivo
+                                                    lineCounter = 0;
+                                                    fileCounter++;
+                                                    destinationFile.Dispose();
+                                                    destinationFile = new StreamWriter(string.Format(destinationFileName1, fileCounter + 1));
+                                                }
+                                            caminhoArquivo = listaDeArquivos[j];
+
+                                            linhasDestino.AddRange(File.ReadAllLines(caminhoArquivo));
+
+
+                                            File.WriteAllLines(caminhoArquivoDestino, linhasDestino.ToArray());
+                                            lineCounter++;
+
+
+                                            
+                                        }
+                                        finally
+                                        {
+                                            destinationFile.Dispose();
+                                        }
+                                    }
+
+                                    
+
+                                    }
+
+                        }
+
+                           
+                        }
+                        
+                         // gerar test 20%
+
+                        if (listaDeArquivos.Length > 0)
+                        {
+
+                            //  1 2 3 4 5 6 7 8 9 10
+                            string caminhoArquivoDestino = @"C:\Users\smart\Downloads\kfolds\test.txt";
+                            int j, k;
+
+
+                            FileStream arquivoDestino = File.Open(caminhoArquivoDestino, FileMode.OpenOrCreate);
+                            arquivoDestino.Close();
+
+                            List<String> linhasDestino = new List<string>();
+                            String caminhoArquivo;
+
+                            int quantidadekfold = int.Parse(textBox1.Text);
+                         
+
+                            double vinteporcento = quantidadekfold * 0.2;
+                   
+                            for (j= quantidadekfold - Convert.ToInt32(vinteporcento); j < quantidadekfold; j++)
+                            {
+
+
+
+                                caminhoArquivo = listaDeArquivos[j];
+
+                                linhasDestino.AddRange(File.ReadAllLines(caminhoArquivo));
+
+
+                                File.WriteAllLines(caminhoArquivoDestino, linhasDestino.ToArray());
+
+                            }
+
+
+
+
+                        }
+
+
+
+
+                    }
+
+
+
+                    //Exibo a mensagem que o arquivo foi atualizado
+
+                    MessageBox.Show("Arquivo atualizado!");
+
+                }
+
+                else
+
+                {
+
+                    //Se não existir exibo a mensagem
+
+                    MessageBox.Show("Arquivo não encontrado!");
+
+                }
+
+            }
+
+            catch (Exception ex)
+
+            {
+
+                MessageBox.Show(ex.Message);
+
+            }
         }
     }
 }
