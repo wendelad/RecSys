@@ -32,8 +32,8 @@ namespace RecSys
             {
 
                 string diretorio = @"C:\Users\smart\Downloads\kfolds";
-                string caminhoArquivoDestino = @"C:\Users\smart\Downloads\kfolds\test-{0}.txt";
-                string caminhoArquivoDestinotreino = @"C:\Users\smart\Downloads\kfolds\treino-{0}.txt";
+                string caminhoArquivoDestino = @"C:\Users\smart\Downloads\kfolds\test.txt";
+                string caminhoArquivoDestinotreino = @"C:\Users\smart\Downloads\kfolds\training.txt";
                 const string destinationFileNamepasta = @"C:\Users\smart\Downloads\kfolds\kfold-pasta-{0}";
                 // const string destinationFileNamepastatreino = @"C:\Users\smart\Downloads\kfolds\treino-pasta-{0}";
                 double tam = 10;
@@ -43,18 +43,19 @@ namespace RecSys
                 Math.Round(tamTrainingSet);
 
 
-                //double percentTestSet = Math.Round(tam * (tamTestSet / 100));
+                double percentTestSet = Math.Round(tam * (tamTestSet / 100));
                 double percentTrainingSet = tam - tamTrainingSet;
                 var fileCounter = 0;
                 HashSet<int> totalSet = new HashSet<int>();
 
                 // preenche o total set e cria as pasta dos k folds
-                for (int i = 1; i <= tam; i++)
+                for (int i = 0; i < tam; i++)
                 {
                     totalSet.Add(i);
-               
-               //     var destino = Directory.CreateDirectory(string.Format(destinationFileNamepasta, fileCounter + 1));
-                 //   fileCounter++;
+
+                    var destino = Directory.CreateDirectory(string.Format(destinationFileNamepasta, fileCounter + 1));
+
+                    fileCounter++;
                 }
 
                 Random random = new Random();
@@ -64,12 +65,12 @@ namespace RecSys
                 List<int> treino = new List<int>();
 
 
-
-                for (int i = 0; i < 10; i++)
+                int num = 1;
+                for (int i = 0; i < 10; i++, num++)
                 {
                     do
                     {
-                        int index = totalSet.ToList()[random.Next(0, 9)];
+                        int index = totalSet.ToList()[random.Next(0, 8)];
                         testSet.Add(index);
                         totalSet.Remove(index);
                     } while (testSet.Count != tamTrainingSet);
@@ -101,89 +102,80 @@ namespace RecSys
 
                     // se  i for maior do que 2 não precisa gerar mais test pq teste sao 20% logo seriam apenas um loop de 2
 
+
+                    String[] listaDeArquivos = Directory.GetFiles(diretorio);
+
+                    if (listaDeArquivos.Length > 0)
                     {
-                        String[] listaDeArquivos = Directory.GetFiles(diretorio);
 
-                        if (listaDeArquivos.Length > 0)
+                        int k = 0;
+
+
+                        FileStream arquivoDestino = File.Open(@"C:\Users\smart\Downloads\kfolds\test" + num + ".txt", FileMode.OpenOrCreate);
+                        arquivoDestino.Close();
+
+                        List<String> linhasDestino = new List<string>();
+                        int arquivoselecionado;
+
+
+                        //fileCounter = 0;
+
+                        for (k = 0; k < teste.Count; k++)
                         {
 
-                            int k = 0;
+
+                            arquivoselecionado = teste[k];
 
 
-                            FileStream arquivoDestino = File.Open(caminhoArquivoDestino, FileMode.OpenOrCreate);
-                            arquivoDestino.Close();
-
-                            List<String> linhasDestino = new List<string>();
-                            int arquivoselecionado;
+                            linhasDestino.AddRange(File.ReadAllLines(listaDeArquivos[arquivoselecionado]));
 
 
-                            DirectoryInfo dir = new DirectoryInfo(@"C:\Users\smart\Downloads\kfolds");
-                             //fileCounter = 0;
-                            for (k = 0; k < teste.Count; k++)
-                            {
+                            File.WriteAllLines(@"C:\Users\smart\Downloads\kfolds\test" + num + ".txt", linhasDestino.ToArray());
 
-
-
-                                arquivoselecionado = teste[k];
-
-
-                                linhasDestino.AddRange(File.ReadAllLines(listaDeArquivos[arquivoselecionado]));
-
-
-                                File.WriteAllLines(caminhoArquivoDestino, linhasDestino.ToArray());
-
-                                var destino = Directory.CreateDirectory(string.Format(destinationFileNamepasta, fileCounter + 1));
-                              
-
-
-
-                                foreach (FileInfo f in dir.GetFiles("test-{0}.txt"))
-                                {
-                                    File.Move(f.FullName, destinationFileNamepasta + f.Name);
-                                }
-                                fileCounter++;
-                            }
                         }
-                       
-
-
-                        // gerar treino 80%
-                        String[] listaDeArquivostreino = Directory.GetFiles(diretorio);
-
-                        if (listaDeArquivostreino.Length > 0)
-                        {
-
-                            int k = 0;
-
-
-                            FileStream arquivoDestino = File.Open(caminhoArquivoDestinotreino, FileMode.OpenOrCreate);
-                            arquivoDestino.Close();
-
-                            List<String> linhasDestino = new List<string>();
-                            int arquivoselecionado;
-
-                            //var fileCounter = 0;
-
-                            for (k = 0; k < treino.Count; k++)
-                            {
-
-
-                                arquivoselecionado = treino[k];
-
-
-                                linhasDestino.AddRange(File.ReadAllLines(listaDeArquivostreino[arquivoselecionado]));
-
-
-                                File.WriteAllLines(caminhoArquivoDestinotreino, linhasDestino.ToArray());
-                                //  var destino = Directory.CreateDirectory(string.Format(destinationFileNamepastatreino, fileCounter + 1));
-                                //fileCounter++;
-                            }
-                        }
-
-
-                        Console.ReadKey();
                     }
+
+
+
+                    // gerar treino 80%
+                    String[] listaDeArquivostreino = Directory.GetFiles(diretorio);
+
+                    if (listaDeArquivostreino.Length > 0)
+                    {
+
+                        int k = 0;
+
+
+                        FileStream arquivoDestino = File.Open(@"C:\Users\smart\Downloads\kfolds\training" + num + ".txt", FileMode.OpenOrCreate);
+                        arquivoDestino.Close();
+
+                        List<String> linhasDestino = new List<string>();
+                        int arquivoselecionado;
+
+                        //var fileCounter = 0;
+
+
+                        for (k = 0; k < treino.Count; k++)
+                        {
+
+
+                            arquivoselecionado = treino[k];
+
+
+                            linhasDestino.AddRange(File.ReadAllLines(listaDeArquivostreino[arquivoselecionado]));
+
+
+                            File.WriteAllLines(@"C:\Users\smart\Downloads\kfolds\training" + num + ".txt", linhasDestino.ToArray());
+
+
+                        }
+                    }
+
+
+                    Console.ReadKey();
+
                 }
+
             }
         }
 
