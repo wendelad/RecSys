@@ -3,276 +3,191 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MyMediaLite;
-using MyMediaLite.Data;
-using MyMediaLite.DataType;
-using MyMediaLite.Eval;
-using MyMediaLite.IO;
-using MyMediaLite.ItemRecommendation;
-using Mono.Options;
-using MyMediaLite.Eval.Measures;
-using btl.generic;
-using GAF;
-using GAF.Operators;
-
 
 namespace RecSys
 {
-	class Program
-	{
-		//Recommender
-		protected List<IRecommender> recommenders = new List<IRecommender>();
-		protected string recommender_options = string.Empty;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
 
-		// data
-		List<IPosOnlyFeedback> training_data = new List<IPosOnlyFeedback>();
-		List<IPosOnlyFeedback> test_data = new List<IPosOnlyFeedback>();
+    namespace Recsys
+    {
 
-		List<IPosOnlyFeedback> training_probe_data = new List<IPosOnlyFeedback>();
-		List<IPosOnlyFeedback> test_probe_data = new List<IPosOnlyFeedback>();
-
-
-		List<IList<int>> test_users = new List<IList<int>>();
-
-		
-
-		// ID mapping objects
-		protected List<IMapping> user_mapping = new List<IMapping>();
-		protected List<IMapping> item_mapping = new List<IMapping>();
-
-		// command line parameters
-		protected string training_file;
-		protected string test_file;
-		protected string training_partial_file;
-		protected string test_partial_file;
-        // help
-        protected bool show_help = false;
-
-
-        protected OptionSet options;
-
-		//Eval
-		protected IList<string> eval_measures;
-		protected string measures;
-
-
-
-
-
-
-
-
-		protected string item_attributes_file;
-		protected List<IBooleanMatrix> item_attributes = new List<IBooleanMatrix>();
-
-
-
-
-		//
-		string[] arquivos = new string[] { "genres", "tags", "directors", "actors", "countries" };
-		//string[] arquivos = new string[] { "genres", "tags", "directors", "countries" };
-		//string[] arquivos = new string[] { "genres", "countries"  };
-
-
-
-
-        protected void Usage(int exit_code)
+        public class Test
         {
-            
-            Console.WriteLine(@"  method ARGUMENTS have the form name=value
-general OPTIONS:
- --recommender=METHOD             use METHOD for recommendations (default: MostPopular) 
- --help                           display this usage information and exit
 
-TODO:
-VAMOS FAZER ENSEMBLE ???
+            public Test()
+            {
+            }
 
-files:
- --training-file=FILE                     read training data from FILE
+            static void Main()
+            {
+                Test.setTestTrainingSet();
+            }
 
- --user-attributes=FILE   NAO FAZEMOS                file with user attribute information, 1 tuple per line
- --item-attributes=FILE                   file with item attribute information, 1 tuple per line
- --user-relations=FILE    NAO FAZEMOS                file with user relation information, 1 tuple per line
- --item-relations=FILE    NAO FAZEMOS                file with item relation information, 1 tuple per line
+            static void setTestTrainingSet()
+            {
+
+                string diretorio = @"C:\Users\smart\Downloads\kfolds";
+                string caminhoArquivoDestino = @"C:\Users\smart\Downloads\kfolds\test-{0}.txt";
+                string caminhoArquivoDestinotreino = @"C:\Users\smart\Downloads\kfolds\treino-{0}.txt";
+                const string destinationFileNamepasta = @"C:\Users\smart\Downloads\kfolds\kfold-pasta-{0}";
+                // const string destinationFileNamepastatreino = @"C:\Users\smart\Downloads\kfolds\treino-pasta-{0}";
+                double tam = 10;
+                double tamTestSet = 0.2;
+                double tamTrainingSet = tam * tamTestSet;
+                //Console.Write("testset " + tamTestSet);
+                Math.Round(tamTrainingSet);
 
 
- --cross-validation=K         perform k-fold cross-validation on the training data
- --test-ratio=NUM             evaluate by splitting of a NUM part of the feedback");
-            Environment.Exit(exit_code);
+                //double percentTestSet = Math.Round(tam * (tamTestSet / 100));
+                double percentTrainingSet = tam - tamTrainingSet;
+                var fileCounter = 0;
+                HashSet<int> totalSet = new HashSet<int>();
+
+                // preenche o total set e cria as pasta dos k folds
+                for (int i = 1; i <= tam; i++)
+                {
+                    totalSet.Add(i);
+               
+               //     var destino = Directory.CreateDirectory(string.Format(destinationFileNamepasta, fileCounter + 1));
+                 //   fileCounter++;
+                }
+
+                Random random = new Random();
+                HashSet<int> testSet = new HashSet<int>();
+
+                List<int> teste = new List<int>();
+                List<int> treino = new List<int>();
+
+
+
+                for (int i = 0; i < 10; i++)
+                {
+                    do
+                    {
+                        int index = totalSet.ToList()[random.Next(0, 9)];
+                        testSet.Add(index);
+                        totalSet.Remove(index);
+                    } while (testSet.Count != tamTrainingSet);
+
+
+
+                    Console.Write(" agora o training ");
+                    foreach (int training in totalSet)
+                    {
+
+                        Console.Write(" " + training);
+                    }
+                    treino = totalSet.ToList();
+
+                    Console.Write(" agora o test ");
+                    foreach (int test in testSet)
+                    {
+
+                        Console.Write(" " + test);
+
+                        totalSet.Add(test);
+                    }
+                    teste = testSet.ToList();
+                    testSet.Clear();
+
+
+
+                    // gerar test  20%
+
+                    // se  i for maior do que 2 não precisa gerar mais test pq teste sao 20% logo seriam apenas um loop de 2
+
+                    {
+                        String[] listaDeArquivos = Directory.GetFiles(diretorio);
+
+                        if (listaDeArquivos.Length > 0)
+                        {
+
+                            int k = 0;
+
+
+                            FileStream arquivoDestino = File.Open(caminhoArquivoDestino, FileMode.OpenOrCreate);
+                            arquivoDestino.Close();
+
+                            List<String> linhasDestino = new List<string>();
+                            int arquivoselecionado;
+
+
+                            DirectoryInfo dir = new DirectoryInfo(@"C:\Users\smart\Downloads\kfolds");
+                             //fileCounter = 0;
+                            for (k = 0; k < teste.Count; k++)
+                            {
+
+
+
+                                arquivoselecionado = teste[k];
+
+
+                                linhasDestino.AddRange(File.ReadAllLines(listaDeArquivos[arquivoselecionado]));
+
+
+                                File.WriteAllLines(caminhoArquivoDestino, linhasDestino.ToArray());
+
+                                var destino = Directory.CreateDirectory(string.Format(destinationFileNamepasta, fileCounter + 1));
+                              
+
+
+
+                                foreach (FileInfo f in dir.GetFiles("test-{0}.txt"))
+                                {
+                                    File.Move(f.FullName, destinationFileNamepasta + f.Name);
+                                }
+                                fileCounter++;
+                            }
+                        }
+                       
+
+
+                        // gerar treino 80%
+                        String[] listaDeArquivostreino = Directory.GetFiles(diretorio);
+
+                        if (listaDeArquivostreino.Length > 0)
+                        {
+
+                            int k = 0;
+
+
+                            FileStream arquivoDestino = File.Open(caminhoArquivoDestinotreino, FileMode.OpenOrCreate);
+                            arquivoDestino.Close();
+
+                            List<String> linhasDestino = new List<string>();
+                            int arquivoselecionado;
+
+                            //var fileCounter = 0;
+
+                            for (k = 0; k < treino.Count; k++)
+                            {
+
+
+                                arquivoselecionado = treino[k];
+
+
+                                linhasDestino.AddRange(File.ReadAllLines(listaDeArquivostreino[arquivoselecionado]));
+
+
+                                File.WriteAllLines(caminhoArquivoDestinotreino, linhasDestino.ToArray());
+                                //  var destino = Directory.CreateDirectory(string.Format(destinationFileNamepastatreino, fileCounter + 1));
+                                //fileCounter++;
+                            }
+                        }
+
+
+                        Console.ReadKey();
+                    }
+                }
+            }
         }
 
-        static void Main(string[] args)
-		{
-			var program = new Program();
-			program.Run(args);
-		}
 
-        
-		protected void Run(string[] args)
-		{
-			Console.WriteLine("WISER-RecSys começou");
 
-			options = new OptionSet() {
-				// string-valued options
-				{ "measures=",            v              => measures             = v },
-			    { "recommender-options=", v              => recommender_options += " " + v },
-                { "help",                 v => show_help         = v != null },
-
-            };
-
-			eval_measures = ItemRecommendationEvaluationResults.DefaultMeasuresToShow;
-
-			IList<string> extra_args = options.Parse(args);
-
-            if (show_help)
-                Usage(0);
-
-
-            //eval
-            if (measures != null)
-				eval_measures = measures.Split(' ', ',');
-
-			training_file = "training.data";
-			test_file = "test.data";
-			training_partial_file = "training.partial.data";
-			test_partial_file = "test.partial.data";
-
-
-
-			for (int i = 0; i < arquivos.Length; i++)
-			{
-
-				MyMediaLite.Random.Seed = 1;
-
-
-				item_attributes_file = "movie_" + arquivos[i] + ".dat_saida";
-
-
-				user_mapping.Add(new Mapping());
-				item_mapping.Add(new Mapping());
-
-
-
-				//Setup recommender
-				recommenders.Add("BPRMFAttr".CreateItemRecommender());
-				recommenders[i].Configure(recommender_options, (string msg) =>
-				{
-					Console.Error.WriteLine(msg); Environment.Exit(-1);
-				});
-
-
-				// item attributes
-				if (recommenders[i] is IItemAttributeAwareRecommender && item_attributes_file == null)
-					Abort("Recommender expects --item-attributes=FILE.");
-
-
-				if (item_attributes_file != null)
-					item_attributes.Add(AttributeData.Read(item_attributes_file, item_mapping[i]));
-				if (recommenders[i] is IItemAttributeAwareRecommender)
-					((IItemAttributeAwareRecommender)recommenders[i]).ItemAttributes = item_attributes[i];
-
-
-				IBooleanMatrix lista_vazia = new SparseBooleanMatrix();
-				if (recommenders[i] is IUserAttributeAwareRecommender)
-					((IUserAttributeAwareRecommender)recommenders[i]).UserAttributes = lista_vazia;
-
-
-				// training data
-				training_data.Add(ItemData.Read(training_file, user_mapping[i], item_mapping[i], false));
-
-				test_data.Add(ItemData.Read(test_file, user_mapping[i], item_mapping[i], false));
-
-
-				test_users.Add(test_data[i].AllUsers);
-
-
-				//Probe
-
-				training_probe_data.Add(ItemData.Read(training_partial_file, user_mapping[i], item_mapping[i], false));
-				test_probe_data.Add(ItemData.Read(test_partial_file, user_mapping[i], item_mapping[i], false));
-
-
-				if (recommenders[i] is MyMediaLite.ItemRecommendation.ItemRecommender)
-					((ItemRecommender)recommenders[i]).Feedback = training_probe_data[i];
-
-
-				//Trainar
-				Console.WriteLine("Vamos ao probe training");
-				var train_time_span = Wrap.MeasureTime(delegate () { recommenders[i].Train(); });
-				Console.WriteLine("training_time " + train_time_span + " ");
-
-
-			}
-
-            Evaluation evaluation = new Evaluation(recommenders, test_probe_data, training_probe_data);
-
-            //Probe learn
-            Console.WriteLine("Probe learn started");
-			TimeSpan time_span = Wrap.MeasureTime(delegate () { evaluation.EvaluateProbe(test_users, user_mapping, item_mapping); });
-			Console.WriteLine(" Probe learn time: " + time_span);
-
-
-			for (int i = 0; i < arquivos.Length; i++)
-			{
-
-				MyMediaLite.Random.Seed = 1;
-
-
-				item_attributes_file = "movie_" + arquivos[i] + ".dat_saida";
-
-
-				//Setup recommender
-				recommenders[i] = "BPRMFAttr".CreateItemRecommender();
-				recommenders[i].Configure(recommender_options, (string msg) => { Console.Error.WriteLine(msg); Environment.Exit(-1); });
-
-
-				// item attributes
-				if (recommenders[i] is IItemAttributeAwareRecommender && item_attributes_file == null)
-					Abort("Recommender expects --item-attributes=FILE.");
-
-
-				if (recommenders[i] is IItemAttributeAwareRecommender)
-					((IItemAttributeAwareRecommender)recommenders[i]).ItemAttributes = item_attributes[i];
-
-
-				IBooleanMatrix lista_vazia = new SparseBooleanMatrix();
-				if (recommenders[i] is IUserAttributeAwareRecommender)
-					((IUserAttributeAwareRecommender)recommenders[i]).UserAttributes = lista_vazia;
-
-
-				if (recommenders[i] is MyMediaLite.ItemRecommendation.ItemRecommender)
-					((ItemRecommender)recommenders[i]).Feedback = training_data[i];
-
-
-
-				//Trainar
-				Console.WriteLine("Agora ao treino normal");
-				var train_time_span = Wrap.MeasureTime(delegate () { recommenders[i].Train(); });
-				Console.WriteLine("training_time " + train_time_span + " ");
-
-			}
-
-            
-
-			var results = evaluation.Evaluate(test_data,training_data,test_users,user_mapping,item_mapping);
-
-			foreach (EvaluationResults result in results)
-			{
-				Console.WriteLine(result.ToString());
-			}
-
-			Console.WriteLine("Press any key to continue...");
-			Console.ReadKey();
-
-		}
-
-
-		protected void Abort(string message)
-		{
-			Console.Error.WriteLine(message);
-			Environment.Exit(-1);
-		}
-
-
-	}
+    }
 }
