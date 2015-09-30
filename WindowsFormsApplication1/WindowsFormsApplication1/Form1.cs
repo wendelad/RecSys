@@ -19,16 +19,17 @@ ex se for gerado 10 arquivos , os arquivos 1-8 serão o training e o 9-10 serão
 para ser gerados os training e test 
 */
 
- // 
+// 
 
 namespace WindowsFormsApplication1
 {
 
     public partial class Form1 : Form
     {
-        private string strPathFile = @"C:\Users\smart\Downloads\ArquivoExemplo.dat_saida";
-        const string destinationFileName = @"C:\Users\smart\Downloads\kfolds\Kfold-parte-{0}.txt";
-        const string destinationFileNamepasta = @"C:\Users\smart\Downloads\kfolds\Kfold-pasta-{0}";
+        private string strPathFile = @"C:\Users\Bruno\Downloads\kfolds\Data_Default.txt";
+        const string destinationFileName = @"C:\Users\Bruno\Downloads\kfolds\Kfold-parte-{0}.txt";
+        const string destinationFileNamepasta = @"C:\Users\Bruno\Downloads\kfolds\Kfold-pasta-{0}";
+        string diretorio = @"C:\Users\Bruno\Downloads\kfolds";
         public double contador3;
         public int linhasporarquivo = 0;
         public Boolean cb_marcado;
@@ -156,81 +157,44 @@ namespace WindowsFormsApplication1
         private void Concatenar()
 
         {
+            //string diretorio = @"C:\Users\Bruno\Downloads\kfolds";
+            //string caminhoArquivoDestino = @"C:\Users\Bruno\Downloads\kfolds\Data_Default.txt";
 
-            try
 
+
+
+            String[] listaDeArquivos = Directory.GetFiles(diretorio);
+
+            if (listaDeArquivos.Length > 0)
             {
 
-                //Verifico se o arquivo que desejo abrir existe e passo como parâmetro a respectiva variável
 
-                if (File.Exists(strPathFile))
+                FileStream arquivoDestino = File.Open(strPathFile, FileMode.OpenOrCreate);
+                arquivoDestino.Close();
 
+                List<String> linhasDestino = new List<string>();
+
+                foreach (String caminhoArquivo in listaDeArquivos)
                 {
-
-                    //Crio um using, dentro dele instancio o StreamWriter, uso a classe File e o método
-
-                    //AppendText para concatenar o texto, passando como parâmetro a variável strPathFile
-
-                    using (StreamWriter sw = File.AppendText(strPathFile))
-
-                    {
-
-                        //Uso o método Write para escrever o arquivo que será adicionado no arquivo texto
-
-
-                        string diretorio = @"C:\Users\Bruno\Downloads\kfolds";
-
-                        String[] listaDeArquivos = Directory.GetFiles(diretorio);
-
-                        if (listaDeArquivos.Length > 0)
-                        {
-                            string caminhoArquivoDestino = @"C:\Users\Bruno\Downloads\kfolds\saida.txt";
-
-                            FileStream arquivoDestino = File.Open(caminhoArquivoDestino, FileMode.OpenOrCreate);
-                            arquivoDestino.Close();
-
-                            List<String> linhasDestino = new List<string>();
-
-                            foreach (String caminhoArquivo in listaDeArquivos)
-                            {
-                                linhasDestino.AddRange(File.ReadAllLines(caminhoArquivo));
-                            }
-
-                            File.WriteAllLines(caminhoArquivoDestino, linhasDestino.ToArray());
-                        }
-
-
-                        //  sw.Write("\r\nTexto adicionado ao final do arquivo1");
-
-
-
-                    }
-
-
-
-                    //Exibo a mensagem que o arquivo foi atualizado
-
-                    MessageBox.Show("Arquivo atualizado!");
-
+                    linhasDestino.AddRange(File.ReadAllLines(caminhoArquivo));
                 }
 
-                else
-
-                {
-
-                    //Se não existir exibo a mensagem
-
-                    MessageBox.Show("Arquivo não encontrado!");
-
-                }
+                File.WriteAllLines(strPathFile, linhasDestino.ToArray());
+                MessageBox.Show("Arquivo atualizado!");
+                ExcluirKfolds();
+                int numero = 1;
+                for(;numero<=10; numero++)
+                    File.Delete(@"C:\Users\Bruno\Downloads\kfolds\Kfold-parte-"+numero+".txt");
 
             }
+            //Exibo a mensagem que o arquivo foi atualizado                      
 
-            catch (Exception ex)
+            else
 
             {
+                //Se não existir exibo a mensagem
 
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Arquivo não encontrado!");
 
             }
 
@@ -316,9 +280,8 @@ namespace WindowsFormsApplication1
                                     {
 
                                         var fileCounter = 0;
-                                        var destinationFile = new StreamWriter(string.Format(destinationFileName, fileCounter + 1));
-                                      //var destino=  Directory.CreateDirectory(string.Format(destinationFileNamepasta, fileCounter + 1));
-                                        
+                                        var destinationFile = new StreamWriter(string.Format(destinationFileName, fileCounter + 1));                                        
+
                                         try
                                         {
                                             var lineCounter = 0;
@@ -331,9 +294,8 @@ namespace WindowsFormsApplication1
                                                     lineCounter = 0;
                                                     fileCounter++;
                                                     destinationFile.Dispose();
-                                            
-                                                    destinationFile = new StreamWriter(string.Format(destinationFileName, fileCounter + 1));
-                                                  //   destino = Directory.CreateDirectory(string.Format(destinationFileNamepasta, fileCounter + 1));
+
+                                                    destinationFile = new StreamWriter(string.Format(destinationFileName, fileCounter + 1));                                                   
 
                                                 }
                                                 destinationFile.WriteLine(line);
@@ -376,7 +338,7 @@ namespace WindowsFormsApplication1
                     //Exibo a mensagem ao usuário
 
                     MessageBox.Show("Arquivo alterado com sucesso!");
-
+                    Excluir();
 
                 }
 
@@ -409,32 +371,44 @@ namespace WindowsFormsApplication1
         private void Excluir()
 
         {
+            try
+            {
+                //Verifico se o arquivo que desejo abrir existe e passo como parâmetro a variável respectiva          
+                if (File.Exists(strPathFile))
 
+                {
+                    //Se existir chamo o método Delete da classe File para apagá-lo e exibo uma msg ao usuário
+                    File.Delete(strPathFile);
+                } 
+                             
+            }
+
+            catch (Exception ex)
+
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
+        private void ExcluirKfolds()
+
+        {
+
+            String[] listaDeArquivos = Directory.GetFiles(diretorio);
             try
 
             {
 
                 //Verifico se o arquivo que desejo abrir existe e passo como parâmetro a variável respectiva
 
-                if (File.Exists(strPathFile))
+                if (File.Exists(destinationFileName))
 
                 {
 
                     //Se existir chamo o método Delete da classe File para apagá-lo e exibo uma msg ao usuário
 
-                    File.Delete(strPathFile);
-
-                    MessageBox.Show("Arquivo excluído com sucesso!");
-
-                }
-
-                else
-
-                {
-
-                    //Se não existir exibo a mensagem
-
-                    MessageBox.Show("Arquivo não encontrado!");
+                    File.Delete(destinationFileName);
 
                 }
 
@@ -471,19 +445,6 @@ namespace WindowsFormsApplication1
 
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox1.Checked)
-            {
-
-                cb_marcado = true;
-
-            }
-            else
-            {
-                cb_marcado = false;
-            }
-        }
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
@@ -508,10 +469,10 @@ namespace WindowsFormsApplication1
         private void gerarTestTrainingSet()
         {
             string nomeDaPasta = @"C:\Users\Bruno\Downloads\kfolds\kfold-pasta-";
-            string diretorio = @"C:\Users\Bruno\Downloads\kfolds";
+            //string diretorio = @"C:\Users\Bruno\Downloads\kfolds";
             string caminhoArquivoDestinoTest = @"C:\Users\Bruno\Downloads\kfolds\test.txt";
             string caminhoArquivoDestinotreino = @"C:\Users\Bruno\Downloads\kfolds\training.txt";
-            const string destinationFileNamepasta = @"C:\Users\Bruno\Downloads\kfolds\kfold-pasta-{0}";
+            //const string destinationFileNamepasta = @"C:\Users\Bruno\Downloads\kfolds\kfold-pasta-{0}";
             DirectoryInfo dir = new DirectoryInfo(@"C:\Users\Bruno\Downloads\kfolds");
 
 
@@ -666,8 +627,7 @@ namespace WindowsFormsApplication1
         }
     }
 }
-    
 
-            
 
-   
+
+
