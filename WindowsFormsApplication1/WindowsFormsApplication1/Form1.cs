@@ -516,7 +516,7 @@ namespace WindowsFormsApplication1
             DirectoryInfo dir = new DirectoryInfo(@"C:\Users\Bruno\Downloads\kfolds");
 
 
-            double tam = int.Parse(Console.ReadLine()); ;
+            double tam = int.Parse(Console.ReadLine());
             double tamTestSet = int.Parse(Console.ReadLine()); ;
             double tamTrainingSet = tam * (tamTestSet / 100);
             Math.Round(tamTrainingSet);
@@ -574,10 +574,7 @@ namespace WindowsFormsApplication1
 
 
 
-                // gerar test  20%
-
-                // se  i for maior do que 2 não precisa gerar mais test pq teste sao 20% logo seriam apenas um loop de 2
-
+                // gerar test  
 
                 String[] listaDeArquivos = Directory.GetFiles(diretorio);
 
@@ -617,7 +614,7 @@ namespace WindowsFormsApplication1
 
 
 
-                // gerar treino 80%
+                // gerar treino
                 String[] listaDeArquivostreino = Directory.GetFiles(diretorio);
 
                 if (listaDeArquivostreino.Length > 0)
@@ -658,8 +655,6 @@ namespace WindowsFormsApplication1
             }
 
         }
-
-
     }
 }
     
