@@ -61,3 +61,13 @@ C:\Users\smart\Desktop\WindowsFormsApplication1\WindowsFormsApplication1\Windows
 C:\Users\smart\Documents\wendelad\RecSys\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
 C:\Users\smart\Documents\wendelad\RecSys\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
 C:\Users\smart\Documents\wendelad\RecSys\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+C:\Users\Bruno\Source\Repos\RecSys3\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+C:\Users\Bruno\Source\Repos\RecSys3\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+C:\Users\Bruno\Source\Repos\RecSys3\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+C:\Users\Bruno\Source\Repos\RecSys3\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+C:\Users\Bruno\Source\Repos\RecSys3\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+C:\Users\Bruno\Source\Repos\RecSys3\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\GAF.dll
+C:\Users\Bruno\Source\Repos\RecSys3\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+C:\Users\Bruno\Source\Repos\RecSys3\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\Bruno\Source\Repos\RecSys3\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\Bruno\Source\Repos\RecSys3\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache

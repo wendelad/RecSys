@@ -178,13 +178,13 @@ namespace WindowsFormsApplication1
                         //Uso o método Write para escrever o arquivo que será adicionado no arquivo texto
 
 
-                        string diretorio = @"C:\Users\smart\Downloads\kfolds";
+                        string diretorio = @"C:\Users\Bruno\Downloads\kfolds";
 
                         String[] listaDeArquivos = Directory.GetFiles(diretorio);
 
                         if (listaDeArquivos.Length > 0)
                         {
-                            string caminhoArquivoDestino = @"C:\Users\smart\Downloads\kfolds\saida.txt";
+                            string caminhoArquivoDestino = @"C:\Users\Bruno\Downloads\kfolds\saida.txt";
 
                             FileStream arquivoDestino = File.Open(caminhoArquivoDestino, FileMode.OpenOrCreate);
                             arquivoDestino.Close();
@@ -503,179 +503,163 @@ namespace WindowsFormsApplication1
 
         private void button1_Click_2(object sender, EventArgs e)
         {
-            gerartraining();
+            gerarTestTrainingSet();
         }
-        private void gerartraining()
-
+        static void gerarTestTrainingSet()
         {
+            string nomeDaPasta = @"C:\Users\Bruno\Downloads\kfolds\kfold-pasta-";
+            string diretorio = @"C:\Users\Bruno\Downloads\kfolds";
+            string caminhoArquivoDestinoTest = @"C:\Users\Bruno\Downloads\kfolds\test.txt";
+            string caminhoArquivoDestinotreino = @"C:\Users\Bruno\Downloads\kfolds\training.txt";
+            const string destinationFileNamepasta = @"C:\Users\Bruno\Downloads\kfolds\kfold-pasta-{0}";
+            // const string destinationFileNamepastatreino = @"C:\Users\smart\Downloads\kfolds\treino-pasta-{0}";
+            DirectoryInfo dir = new DirectoryInfo(@"C:\Users\Bruno\Downloads\kfolds");
 
-            try
 
+            double tam = int.Parse(Console.ReadLine()); ;
+            double tamTestSet = int.Parse(Console.ReadLine()); ;
+            double tamTrainingSet = tam * (tamTestSet / 100);
+            Math.Round(tamTrainingSet);
+            double percentTrainingSet = tam - tamTrainingSet;
+            var fileCounter = 0;
+            HashSet<int> totalSet = new HashSet<int>();
+
+            // preenche o total set e cria as pasta dos k folds
+            for (int i = 0; i < tam; i++)
             {
+                totalSet.Add(i);
 
-                //Verifico se o arquivo que desejo abrir existe e passo como parâmetro a respectiva variável
+                var destino = Directory.CreateDirectory(string.Format(destinationFileNamepasta, fileCounter + 1));
 
-                if (File.Exists(strPathFile))
+                fileCounter++;
+            }
 
+            Random random = new Random();
+            HashSet<int> testSet = new HashSet<int>();
+
+            List<int> teste = new List<int>();
+            List<int> treino = new List<int>();
+
+
+            int num = 1;
+            for (int i = 0; i < tam; i++, num++)
+            {
+                do
+                {
+                    int index = totalSet.ToList()[random.Next(0, totalSet.Count)];
+                    testSet.Add(index);
+                    totalSet.Remove(index);
+                } while (testSet.Count != tamTrainingSet);
+
+
+
+                Console.Write(" agora o training ");
+                foreach (int training in totalSet)
                 {
 
-                    //Crio um using, dentro dele instancio o StreamWriter, uso a classe File e o método
+                    Console.Write(" " + training);
+                }
+                treino = totalSet.ToList();
 
-                    //AppendText para concatenar o texto, passando como parâmetro a variável strPathFile
+                Console.Write(" agora o test ");
+                foreach (int test in testSet)
+                {
 
-                    using (StreamWriter sw = File.AppendText(strPathFile))
+                    Console.Write(" " + test);
 
+                    totalSet.Add(test);
+                }
+                teste = testSet.ToList();
+                testSet.Clear();
+
+
+
+                // gerar test  20%
+
+                // se  i for maior do que 2 não precisa gerar mais test pq teste sao 20% logo seriam apenas um loop de 2
+
+
+                String[] listaDeArquivos = Directory.GetFiles(diretorio);
+
+                if (listaDeArquivos.Length > 0)
+                {
+
+                    int k = 0;
+
+
+                    FileStream arquivoDestino = File.Open(caminhoArquivoDestinoTest, FileMode.OpenOrCreate);
+                    arquivoDestino.Close();
+
+                    List<String> linhasDestino = new List<string>();
+                    int arquivoselecionado;
+
+
+                    //fileCounter = 0;
+
+                    for (k = 0; k < teste.Count; k++)
                     {
 
-                        //Uso o método Write para escrever o arquivo que será adicionado no arquivo texto
 
-                        const string destinationFileName1 = @"C:\smart\smart\Downloads\kfolds\training-parte-{0}.txt";
-                        string diretorio = @"C:\Users\smart\Downloads\kfolds";
-
-                        int quantidadearquivos = int.Parse(textBox1.Text);
-                        String[] listaDeArquivos = Directory.GetFiles(diretorio);
+                        arquivoselecionado = teste[k];
 
 
-                        if (listaDeArquivos.Length > 0)
-                        {
-
-                            //  1 2 3 4 5 6 7 8 9 10
-                            string caminhoArquivoDestino = @"C:\Users\smart\Downloads\kfolds\training.txt";
-                            int j, k;
+                        linhasDestino.AddRange(File.ReadAllLines(listaDeArquivos[arquivoselecionado]));
 
 
-                            FileStream arquivoDestino = File.Open(caminhoArquivoDestino, FileMode.OpenOrCreate);
-                            arquivoDestino.Close();
+                        File.WriteAllLines(caminhoArquivoDestinoTest, linhasDestino.ToArray());
 
-                            List<String> linhasDestino = new List<string>();
-                            String caminhoArquivo;
+                    }
+                    string destinoTest = nomeDaPasta + num + "\\test.txt";
+                    foreach (FileInfo f in dir.GetFiles("test.txt"))
+                        File.Move(caminhoArquivoDestinoTest, destinoTest);
 
-                            int quantidadekfold = int.Parse(textBox1.Text);
-
-
-                            double oitentaporcento = quantidadekfold * 0.8;
-                            
-                            for (int i = 0; i < oitentaporcento; i++) { 
-                                    for (j = i; j < oitentaporcento; j++)
-                                    {
-
-                                    using (var sourcefile = new StreamReader(strPathFile))
-                                    {
-
-                                        var fileCounter = 0;
-                                        var destinationFile = new StreamWriter(string.Format(destinationFileName1, fileCounter + 1));
-                                        try
-                                        {
-                                            var lineCounter = 0;
-                                            string line;
-                                          
-                                                if (lineCounter >= linhasporarquivo)
-                                                {
-                                                    //sim.. hora de mudar de arquivo
-                                                    lineCounter = 0;
-                                                    fileCounter++;
-                                                    destinationFile.Dispose();
-                                                    destinationFile = new StreamWriter(string.Format(destinationFileName1, fileCounter + 1));
-                                                }
-                                            caminhoArquivo = listaDeArquivos[j];
-
-                                            linhasDestino.AddRange(File.ReadAllLines(caminhoArquivo));
-
-
-                                            File.WriteAllLines(caminhoArquivoDestino, linhasDestino.ToArray());
-                                            lineCounter++;
-
-
-                                            
-                                        }
-                                        finally
-                                        {
-                                            destinationFile.Dispose();
-                                        }
-                                    }
-
-                                    
-
-                                    }
-
-                        }
-
-                           
-                        }
-                        
-                         // gerar test 20%
-
-                        if (listaDeArquivos.Length > 0)
-                        {
-
-                            //  1 2 3 4 5 6 7 8 9 10
-                            string caminhoArquivoDestino = @"C:\Users\smart\Downloads\kfolds\test.txt";
-                            int j, k;
-
-
-                            FileStream arquivoDestino = File.Open(caminhoArquivoDestino, FileMode.OpenOrCreate);
-                            arquivoDestino.Close();
-
-                            List<String> linhasDestino = new List<string>();
-                            String caminhoArquivo;
-
-                            int quantidadekfold = int.Parse(textBox1.Text);
-                         
-
-                            double vinteporcento = quantidadekfold * 0.2;
-                   
-                            for (j= quantidadekfold - Convert.ToInt32(vinteporcento); j < quantidadekfold; j++)
-                            {
+                }
 
 
 
-                                caminhoArquivo = listaDeArquivos[j];
+                // gerar treino 80%
+                String[] listaDeArquivostreino = Directory.GetFiles(diretorio);
 
-                                linhasDestino.AddRange(File.ReadAllLines(caminhoArquivo));
+                if (listaDeArquivostreino.Length > 0)
+                {
 
-
-                                File.WriteAllLines(caminhoArquivoDestino, linhasDestino.ToArray());
-
-                            }
-
+                    int k = 0;
 
 
+                    FileStream arquivoDestino = File.Open(caminhoArquivoDestinotreino, FileMode.OpenOrCreate);
+                    arquivoDestino.Close();
 
-                        }
+                    List<String> linhasDestino = new List<string>();
+                    int arquivoselecionado;
+
+                    //var fileCounter = 0;
 
 
+                    for (k = 0; k < treino.Count; k++)
+                    {
+
+
+                        arquivoselecionado = treino[k];
+
+
+                        linhasDestino.AddRange(File.ReadAllLines(listaDeArquivostreino[arquivoselecionado]));
+
+
+                        File.WriteAllLines(caminhoArquivoDestinotreino, linhasDestino.ToArray());
 
 
                     }
-
-
-
-                    //Exibo a mensagem que o arquivo foi atualizado
-
-                    MessageBox.Show("Arquivo atualizado!");
-
-                }
-
-                else
-
-                {
-
-                    //Se não existir exibo a mensagem
-
-                    MessageBox.Show("Arquivo não encontrado!");
+                    string destinoTraining = nomeDaPasta + num + "\\training.txt";
+                    foreach (FileInfo f in dir.GetFiles("training.txt"))
+                        File.Move(caminhoArquivoDestinotreino, destinoTraining);
 
                 }
 
             }
 
-            catch (Exception ex)
-
-            {
-
-                MessageBox.Show(ex.Message);
-
-            }
         }
+
+
     }
 }
     
