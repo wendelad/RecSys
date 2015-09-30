@@ -497,7 +497,7 @@ namespace WindowsFormsApplication1
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            //  int valorNum1 = int.Parse(textBox1.Text);
+            //int valorNum1 = int.Parse(textBox1.Text);
             //linhasporarquivo = valorNum1;
         }
 
@@ -505,19 +505,18 @@ namespace WindowsFormsApplication1
         {
             gerarTestTrainingSet();
         }
-        static void gerarTestTrainingSet()
+        private void gerarTestTrainingSet()
         {
             string nomeDaPasta = @"C:\Users\Bruno\Downloads\kfolds\kfold-pasta-";
             string diretorio = @"C:\Users\Bruno\Downloads\kfolds";
             string caminhoArquivoDestinoTest = @"C:\Users\Bruno\Downloads\kfolds\test.txt";
             string caminhoArquivoDestinotreino = @"C:\Users\Bruno\Downloads\kfolds\training.txt";
             const string destinationFileNamepasta = @"C:\Users\Bruno\Downloads\kfolds\kfold-pasta-{0}";
-            // const string destinationFileNamepastatreino = @"C:\Users\smart\Downloads\kfolds\treino-pasta-{0}";
             DirectoryInfo dir = new DirectoryInfo(@"C:\Users\Bruno\Downloads\kfolds");
 
 
-            double tam = int.Parse(Console.ReadLine());
-            double tamTestSet = int.Parse(Console.ReadLine()); ;
+            double tam = double.Parse(textBox2.Text);
+            double tamTestSet = double.Parse(textBox3.Text); ;
             double tamTrainingSet = tam * (tamTestSet / 100);
             Math.Round(tamTrainingSet);
             double percentTrainingSet = tam - tamTrainingSet;
@@ -653,6 +652,16 @@ namespace WindowsFormsApplication1
                 }
 
             }
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
 
         }
     }
