@@ -26,6 +26,7 @@ namespace WindowsFormsApplication1
 
     public partial class Form1 : Form
     {
+        const string Arquivoteste = @"C:\Users\laique\Downloads\kfolds\Kfold-parte-1.txt";
         private string strPathFile = @"C:\Users\laique\Downloads\kfolds\Data_Default.txt";
         const string destinationFileName = @"C:\Users\laique\Downloads\kfolds\Kfold-parte-{0}.txt";
         const string destinationFileNamepasta = @"C:\Users\laique\Downloads\kfolds\Kfold-pasta-{0}";
@@ -416,24 +417,29 @@ namespace WindowsFormsApplication1
         private void gerarTestTrainingSet(int tam, double tamTestSet)
         {
 
-            // configuração das variaveis onde vão ser lidas os arquivos...
-            string nomeDaPasta = @"C:\Users\laique\Downloads\kfolds\kfold-pasta-";
-            string caminhoArquivoDestinoTest = @"C:\Users\laique\Downloads\kfolds\test.txt";
-            string caminhoArquivoDestinotreino = @"C:\Users\laique\Downloads\kfolds\training.txt";
-            DirectoryInfo dir = new DirectoryInfo(@"C:\Users\laique\Downloads\kfolds");
+
+            if (File.Exists(Arquivoteste))
+
+            {
+
+                // configuração das variaveis onde vão ser lidas os arquivos...
+                string nomeDaPasta = @"C:\Users\laique\Downloads\kfolds\kfold-pasta-";
+                string caminhoArquivoDestinoTest = @"C:\Users\laique\Downloads\kfolds\test.txt";
+                string caminhoArquivoDestinotreino = @"C:\Users\laique\Downloads\kfolds\training.txt";
+                DirectoryInfo dir = new DirectoryInfo(@"C:\Users\laique\Downloads\kfolds");
 
 
-            // faz as leituras dos dados inseridos na interface fazendo as devidas conversões de valores
+                // faz as leituras dos dados inseridos na interface fazendo as devidas conversões de valores
 
-            
-                
+
+
                 //double tam = double.Parse(textBox2.Text);
-              //  double tamTestSet = double.Parse(textBox3.Text);
+                //  double tamTestSet = double.Parse(textBox3.Text);
                 double tamTrainingSet = tam * (tamTestSet / 100);
                 tamTrainingSet = Math.Round(tamTrainingSet);
                 double percentTrainingSet = tam - tamTrainingSet;
 
-             var fileCounter = 0;
+                var fileCounter = 0;
 
                 HashSet<int> totalSet = new HashSet<int>();
 
@@ -571,10 +577,13 @@ namespace WindowsFormsApplication1
 
                 }
 
-            
-          
+
+
+            }
+            else
+                Console.Write("Arquivos kfolds não existem");
         }
-            
+        
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
 
