@@ -26,10 +26,10 @@ namespace WindowsFormsApplication1
 
     public partial class Form1 : Form
     {
-        private string strPathFile = @"C:\Users\Bruno\Downloads\kfolds\Data_Default.txt";
-        const string destinationFileName = @"C:\Users\Bruno\Downloads\kfolds\Kfold-parte-{0}.txt";
-        const string destinationFileNamepasta = @"C:\Users\Bruno\Downloads\kfolds\Kfold-pasta-{0}";
-        string diretorio = @"C:\Users\Bruno\Downloads\kfolds";
+        private string strPathFile = @"C:\Users\laique\Downloads\kfolds\Data_Default.txt";
+        const string destinationFileName = @"C:\Users\laique\Downloads\kfolds\Kfold-parte-{0}.txt";
+        const string destinationFileNamepasta = @"C:\Users\laique\Downloads\kfolds\Kfold-pasta-{0}";
+        string diretorio = @"C:\Users\laique\Downloads\kfolds";
         public double contador3;
         public int linhasporarquivo = 0;
         public Boolean cb_marcado;
@@ -41,64 +41,7 @@ namespace WindowsFormsApplication1
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
 
-            Criar();
-        }
-
-
-        private void Criar()
-
-        {
-
-            try
-
-            {
-
-                //Usarei a cláusula using como boas práticas de programação em todos os métodos
-
-                //Instancio a classe FileStream, uso a classe File e o método Create para criar o
-
-                //arquivo passando como parâmetro a variável strPathFile, que contém o arquivo
-
-                using (FileStream fs = File.Create(strPathFile))
-
-                {
-
-                    //Crio outro using, dentro dele instancio o StreamWriter (classe para gravar os dados)
-
-                    //que recebe como parâmetro a variável fs, referente ao FileStream criado anteriormente
-
-                    using (StreamWriter sw = new StreamWriter(fs))
-
-                    {
-
-                        //Uso o método Write para escrever algo em nosso arquivo texto
-
-                        sw.Write("Texto adicionado ao exemplo!");
-
-                    }
-
-                }
-
-            }
-
-            catch (Exception ex)
-
-            {
-
-                MessageBox.Show(ex.Message);
-
-            }
-
-
-
-            //Se tudo ocorrer bem, exibo a mensagem ao usuário.
-
-            MessageBox.Show("Arquivo criado com sucesso!!!");
-
-        }
 
         private void btnAbrir_Click(object sender, EventArgs e)
         {
@@ -184,7 +127,7 @@ namespace WindowsFormsApplication1
                 ExcluirKfolds();
                 int numero = 1;
                 for (; numero <= 10; numero++)
-                    File.Delete(@"C:\Users\Bruno\Downloads\kfolds\Kfold-parte-" + numero + ".txt");
+                    File.Delete(@"C:\Users\laique\Downloads\kfolds\Kfold-parte-" + numero + ".txt");
 
             }
             //Exibo a mensagem que o arquivo foi atualizado                      
@@ -202,16 +145,17 @@ namespace WindowsFormsApplication1
 
         private void btnAlterar_Click(object sender, EventArgs e)
         {
-            Alterar();
+            Alterar(10);
         }
-        private void Alterar()
+        private void Alterar(int valorNum1)
 
         {
 
             try
 
             {
-
+              //  int valorNum1 = int.Parse(textBox1.Text);
+                linhasporarquivo = valorNum1;
                 //Verifico se o arquivo que desejo abrir existe e passo como parâmetro a variável respectiva
 
                 if (File.Exists(strPathFile))
@@ -267,6 +211,7 @@ namespace WindowsFormsApplication1
                                         string strlinha = null;
                                         // enquanto houver linhas no arquivo vai incrementando o contador ao final vai ter a quantidade total de linhas
                                         while ((strlinha = sr.ReadLine()) != null)
+
                                         {
                                             contador++;
 
@@ -277,8 +222,7 @@ namespace WindowsFormsApplication1
                                     }
 
                                     // pega o valor do textbox convertendo para inteiro textbox1 é a quantidade de k folds
-                                    int valorNum1 = int.Parse(textBox1.Text);
-                                    linhasporarquivo = valorNum1;
+                                    
 
                                     linhasporarquivo = contador1 / linhasporarquivo;
 
@@ -295,6 +239,10 @@ namespace WindowsFormsApplication1
                                         {
                                             var lineCounter = 0;
                                             string line;
+
+                                            // reseto o apontador para o inicio do arquivo
+                                            fs.Seek(0, SeekOrigin.Begin);
+
                                             while ((line = sr.ReadLine()) != null)
                                             {
 
@@ -350,7 +298,7 @@ namespace WindowsFormsApplication1
                     //Exibo a mensagem ao usuário
 
                     MessageBox.Show("Arquivo alterado com sucesso!");
-                    Excluir();
+                   Excluir();
 
                 }
 
@@ -370,16 +318,13 @@ namespace WindowsFormsApplication1
 
             {
 
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(" O campo de quantidade de kfolds está vazio  ");
 
             }
 
         }
 
-        private void btnExcluir_Click(object sender, EventArgs e)
-        {
-            Excluir();
-        }
+        
         private void Excluir()
 
         {
@@ -466,165 +411,173 @@ namespace WindowsFormsApplication1
 
         private void button1_Click_2(object sender, EventArgs e)
         {
-            gerarTestTrainingSet();
+            gerarTestTrainingSet(10,20);
         }
-        private void gerarTestTrainingSet()
+        private void gerarTestTrainingSet(int tam, double tamTestSet)
         {
 
             // configuração das variaveis onde vão ser lidas os arquivos...
-            string nomeDaPasta = @"C:\Users\Bruno\Downloads\kfolds\kfold-pasta-";
-            string caminhoArquivoDestinoTest = @"C:\Users\Bruno\Downloads\kfolds\test.txt";
-            string caminhoArquivoDestinotreino = @"C:\Users\Bruno\Downloads\kfolds\training.txt";
-            DirectoryInfo dir = new DirectoryInfo(@"C:\Users\Bruno\Downloads\kfolds");
+            string nomeDaPasta = @"C:\Users\laique\Downloads\kfolds\kfold-pasta-";
+            string caminhoArquivoDestinoTest = @"C:\Users\laique\Downloads\kfolds\test.txt";
+            string caminhoArquivoDestinotreino = @"C:\Users\laique\Downloads\kfolds\training.txt";
+            DirectoryInfo dir = new DirectoryInfo(@"C:\Users\laique\Downloads\kfolds");
 
 
             // faz as leituras dos dados inseridos na interface fazendo as devidas conversões de valores
-            double tam = double.Parse(textBox2.Text);
-            double tamTestSet = double.Parse(textBox3.Text); ;
-            double tamTrainingSet = tam * (tamTestSet / 100);
-            Math.Round(tamTrainingSet);
-            double percentTrainingSet = tam - tamTrainingSet;
-            var fileCounter = 0;
-            HashSet<int> totalSet = new HashSet<int>();
 
-            // preenche o total set e cria as pasta dos k folds
-            for (int i = 0; i < tam; i++)
-            {
-                totalSet.Add(i);
+            
+                
+                //double tam = double.Parse(textBox2.Text);
+              //  double tamTestSet = double.Parse(textBox3.Text);
+                double tamTrainingSet = tam * (tamTestSet / 100);
+                tamTrainingSet = Math.Round(tamTrainingSet);
+                double percentTrainingSet = tam - tamTrainingSet;
 
-                var destino = Directory.CreateDirectory(string.Format(destinationFileNamepasta, fileCounter + 1));
+             var fileCounter = 0;
 
-                fileCounter++;
-            }
+                HashSet<int> totalSet = new HashSet<int>();
 
-            Random random = new Random();
-            HashSet<int> testSet = new HashSet<int>();
-
-            // estas listas serão usadas para salvar os valores originais 
-            List<int> teste = new List<int>();
-            List<int> treino = new List<int>();
-
-
-            // loop sobre a quantidade de arquivos para gerar aleatoriamente os test e training  e guardar em uma lista
-            int num = 1;
-            for (int i = 0; i < tam; i++, num++)
-            {
-                do
+                // preenche o total set e cria as pasta dos k folds
+                for (int i = 0; i < tam; i++)
                 {
-                    int index = totalSet.ToList()[random.Next(0, totalSet.Count)];
-                    testSet.Add(index);
-                    totalSet.Remove(index);
-                } while (testSet.Count != tamTrainingSet);
+                    totalSet.Add(i);
 
+                    var destino = Directory.CreateDirectory(string.Format(destinationFileNamepasta, fileCounter + 1));
 
-
-                Console.Write(" agora o training ");
-                foreach (int training in totalSet)
-                {
-
-                    Console.Write(" " + training);
+                    fileCounter++;
                 }
-                treino = totalSet.ToList();
 
-                Console.Write(" agora o test ");
-                foreach (int test in testSet)
+                Random random = new Random();
+                HashSet<int> testSet = new HashSet<int>();
+
+                // estas listas serão usadas para salvar os valores originais 
+                List<int> teste = new List<int>();
+                List<int> treino = new List<int>();
+
+
+                // loop sobre a quantidade de arquivos para gerar aleatoriamente os test e training  e guardar em uma lista
+                int num = 1;
+                for (int i = 0; i < tam; i++, num++)
                 {
-
-                    Console.Write(" " + test);
-
-                    totalSet.Add(test);
-                }
-                teste = testSet.ToList();
-                testSet.Clear();
-
+                    do
+                    {
+                        int index = totalSet.ToList()[random.Next(0, totalSet.Count)];
+                        testSet.Add(index);
+                        totalSet.Remove(index);
+                    } while (testSet.Count != tamTrainingSet);
 
 
-                // gerar test  
 
-                // pego todos os arquivos contidos na pasta "diretorio" que é uma variavel declarada no inicio com caminho da pasta
-                String[] listaDeArquivos = Directory.GetFiles(diretorio);
-
-                // se possuir arquivos faz
-                if (listaDeArquivos.Length > 0)
-                {
-
-                    int k = 0;
-
-                    // cria o arquivo de test
-                    FileStream arquivoDestino = File.Open(caminhoArquivoDestinoTest, FileMode.OpenOrCreate);
-                    arquivoDestino.Close();
-
-                    List<String> linhasDestino = new List<string>();
-                    int arquivoselecionado;
-
-
-                    //fileCounter = 0;
-
-                    for (k = 0; k < teste.Count; k++)
+                    Console.Write(" agora o training ");
+                    foreach (int training in totalSet)
                     {
 
-
-                        arquivoselecionado = teste[k];
-
-
-                        linhasDestino.AddRange(File.ReadAllLines(listaDeArquivos[arquivoselecionado]));
-
-
-                        File.WriteAllLines(caminhoArquivoDestinoTest, linhasDestino.ToArray());
-
+                        Console.Write(" " + training);
                     }
-                    string destinoTest = nomeDaPasta + num + "\\test.txt";
-                    foreach (FileInfo f in dir.GetFiles("test.txt"))
-                        File.Move(caminhoArquivoDestinoTest, destinoTest);
+                    treino = totalSet.ToList();
 
-                }
-
-
-
-                // gerar treino
-                String[] listaDeArquivostreino = Directory.GetFiles(diretorio);
-
-                if (listaDeArquivostreino.Length > 0)
-                {
-
-                    int k = 0;
-
-
-                    FileStream arquivoDestino = File.Open(caminhoArquivoDestinotreino, FileMode.OpenOrCreate);
-                    arquivoDestino.Close();
-
-                    List<String> linhasDestino = new List<string>();
-                    int arquivoselecionado;
-
-                    //var fileCounter = 0;
-
-                    // pecorrer a lista de training
-                    for (k = 0; k < treino.Count; k++)
+                    Console.Write(" agora o test ");
+                    foreach (int test in testSet)
                     {
 
-                        // pego o arquivo na 1 posição da lista de training ler as linhas desse arquivo e escreve no arquivo de training no caminho destino
-                        arquivoselecionado = treino[k];
+                        Console.Write(" " + test);
+
+                        totalSet.Add(test);
+                    }
+                    teste = testSet.ToList();
+                    testSet.Clear();
 
 
-                        linhasDestino.AddRange(File.ReadAllLines(listaDeArquivostreino[arquivoselecionado]));
+
+                    // gerar test  
+
+                    // pego todos os arquivos contidos na pasta "diretorio" que é uma variavel declarada no inicio com caminho da pasta
+                    String[] listaDeArquivos = Directory.GetFiles(diretorio);
+
+                    // se possuir arquivos faz
+                    if (listaDeArquivos.Length > 0)
+                    {
+
+                        int k = 0;
+
+                        // cria o arquivo de test
+                        FileStream arquivoDestino = File.Open(caminhoArquivoDestinoTest, FileMode.OpenOrCreate);
+                        arquivoDestino.Close();
+
+                        List<String> linhasDestino = new List<string>();
+                        int arquivoselecionado;
 
 
-                        File.WriteAllLines(caminhoArquivoDestinotreino, linhasDestino.ToArray());
+                        //fileCounter = 0;
 
+                        for (k = 0; k < teste.Count; k++)
+                        {
+
+
+                            arquivoselecionado = teste[k];
+
+
+                            linhasDestino.AddRange(File.ReadAllLines(listaDeArquivos[arquivoselecionado]));
+
+
+                            File.WriteAllLines(caminhoArquivoDestinoTest, linhasDestino.ToArray());
+
+                        }
+                        string destinoTest = nomeDaPasta + num + "\\test.txt";
+                        foreach (FileInfo f in dir.GetFiles("test.txt"))
+                            File.Move(caminhoArquivoDestinoTest, destinoTest);
 
                     }
-                    string destinoTraining = nomeDaPasta + num + "\\training.txt";
-                    foreach (FileInfo f in dir.GetFiles("training.txt"))
-                        File.Move(caminhoArquivoDestinotreino, destinoTraining);
+
+
+
+                    // gerar treino
+                    String[] listaDeArquivostreino = Directory.GetFiles(diretorio);
+
+                    if (listaDeArquivostreino.Length > 0)
+                    {
+
+                        int k = 0;
+
+
+                        FileStream arquivoDestino = File.Open(caminhoArquivoDestinotreino, FileMode.OpenOrCreate);
+                        arquivoDestino.Close();
+
+                        List<String> linhasDestino = new List<string>();
+                        int arquivoselecionado;
+
+                        //var fileCounter = 0;
+
+                        // pecorrer a lista de training
+                        for (k = 0; k < treino.Count; k++)
+                        {
+
+                            // pego o arquivo na 1 posição da lista de training ler as linhas desse arquivo e escreve no arquivo de training no caminho destino
+                            arquivoselecionado = treino[k];
+
+
+                            linhasDestino.AddRange(File.ReadAllLines(listaDeArquivostreino[arquivoselecionado]));
+
+
+                            File.WriteAllLines(caminhoArquivoDestinotreino, linhasDestino.ToArray());
+
+
+                        }
+                        string destinoTraining = nomeDaPasta + num + "\\training.txt";
+                        foreach (FileInfo f in dir.GetFiles("training.txt"))
+                            File.Move(caminhoArquivoDestinotreino, destinoTraining);
+
+                    }
 
                 }
 
-            }
-
+            
+          
         }
-
+            
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
+
 
         }
 
