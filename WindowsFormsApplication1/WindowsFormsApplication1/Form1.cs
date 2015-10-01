@@ -183,8 +183,8 @@ namespace WindowsFormsApplication1
                 MessageBox.Show("Arquivo atualizado!");
                 ExcluirKfolds();
                 int numero = 1;
-                for(;numero<=10; numero++)
-                    File.Delete(@"C:\Users\Bruno\Downloads\kfolds\Kfold-parte-"+numero+".txt");
+                for (; numero <= 10; numero++)
+                    File.Delete(@"C:\Users\Bruno\Downloads\kfolds\Kfold-parte-" + numero + ".txt");
 
             }
             //Exibo a mensagem que o arquivo foi atualizado                      
@@ -256,11 +256,16 @@ namespace WindowsFormsApplication1
 
                                 {
 
+
+                                    // flag para garantir que so ira contar o numero de linhas do arquivo uma vez garantindo que  
+                                    //a % seja em cima da quantidade original de linhas
                                     if (flag != 1)
                                     {
                                         int contador = 0;
 
+
                                         string strlinha = null;
+                                        // enquanto houver linhas no arquivo vai incrementando o contador ao final vai ter a quantidade total de linhas
                                         while ((strlinha = sr.ReadLine()) != null)
                                         {
                                             contador++;
@@ -271,16 +276,20 @@ namespace WindowsFormsApplication1
 
                                     }
 
+                                    // pega o valor do textbox convertendo para inteiro textbox1 é a quantidade de k folds
                                     int valorNum1 = int.Parse(textBox1.Text);
                                     linhasporarquivo = valorNum1;
 
                                     linhasporarquivo = contador1 / linhasporarquivo;
 
+                                    //Instancio o StreamWriter para escrever os dados no arquivo 
+                                    // codigo para geração dos k folds pecorre o arquivo original escrevendo os dados em um outro arquivo
+
                                     using (var sourcefile = new StreamReader(strPathFile))
                                     {
 
                                         var fileCounter = 0;
-                                        var destinationFile = new StreamWriter(string.Format(destinationFileName, fileCounter + 1));                                        
+                                        var destinationFile = new StreamWriter(string.Format(destinationFileName, fileCounter + 1));
 
                                         try
                                         {
@@ -288,6 +297,9 @@ namespace WindowsFormsApplication1
                                             string line;
                                             while ((line = sr.ReadLine()) != null)
                                             {
+
+                                                // linhas por arquivo é a calculo feito quantas linhas vai ter em cada k fold de acordo com a % escolhida 
+                                                // quando esse limite for antigido ira mudar para  o proximo arquivo . ficando asism kfold-parte-1 , kfold-parte-2 ...
                                                 if (lineCounter >= linhasporarquivo)
                                                 {
                                                     //sim.. hora de mudar de arquivo
@@ -295,7 +307,7 @@ namespace WindowsFormsApplication1
                                                     fileCounter++;
                                                     destinationFile.Dispose();
 
-                                                    destinationFile = new StreamWriter(string.Format(destinationFileName, fileCounter + 1));                                                   
+                                                    destinationFile = new StreamWriter(string.Format(destinationFileName, fileCounter + 1));
 
                                                 }
                                                 destinationFile.WriteLine(line);
@@ -379,8 +391,8 @@ namespace WindowsFormsApplication1
                 {
                     //Se existir chamo o método Delete da classe File para apagá-lo e exibo uma msg ao usuário
                     File.Delete(strPathFile);
-                } 
-                             
+                }
+
             }
 
             catch (Exception ex)
@@ -424,16 +436,6 @@ namespace WindowsFormsApplication1
 
         }
 
-        private bool ExisteNumero(List<int> lista, int numero)
-        {
-            for (int i = 0; i < lista.Count; i++)
-            {
-                if (lista[i] == numero)
-                    return true;
-            }
-
-            return false;
-        }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
@@ -468,14 +470,15 @@ namespace WindowsFormsApplication1
         }
         private void gerarTestTrainingSet()
         {
+
+            // configuração das variaveis onde vão ser lidas os arquivos...
             string nomeDaPasta = @"C:\Users\Bruno\Downloads\kfolds\kfold-pasta-";
-            //string diretorio = @"C:\Users\Bruno\Downloads\kfolds";
             string caminhoArquivoDestinoTest = @"C:\Users\Bruno\Downloads\kfolds\test.txt";
             string caminhoArquivoDestinotreino = @"C:\Users\Bruno\Downloads\kfolds\training.txt";
-            //const string destinationFileNamepasta = @"C:\Users\Bruno\Downloads\kfolds\kfold-pasta-{0}";
             DirectoryInfo dir = new DirectoryInfo(@"C:\Users\Bruno\Downloads\kfolds");
 
 
+            // faz as leituras dos dados inseridos na interface fazendo as devidas conversões de valores
             double tam = double.Parse(textBox2.Text);
             double tamTestSet = double.Parse(textBox3.Text); ;
             double tamTrainingSet = tam * (tamTestSet / 100);
@@ -497,10 +500,12 @@ namespace WindowsFormsApplication1
             Random random = new Random();
             HashSet<int> testSet = new HashSet<int>();
 
+            // estas listas serão usadas para salvar os valores originais 
             List<int> teste = new List<int>();
             List<int> treino = new List<int>();
 
 
+            // loop sobre a quantidade de arquivos para gerar aleatoriamente os test e training  e guardar em uma lista
             int num = 1;
             for (int i = 0; i < tam; i++, num++)
             {
@@ -536,14 +541,16 @@ namespace WindowsFormsApplication1
 
                 // gerar test  
 
+                // pego todos os arquivos contidos na pasta "diretorio" que é uma variavel declarada no inicio com caminho da pasta
                 String[] listaDeArquivos = Directory.GetFiles(diretorio);
 
+                // se possuir arquivos faz
                 if (listaDeArquivos.Length > 0)
                 {
 
                     int k = 0;
 
-
+                    // cria o arquivo de test
                     FileStream arquivoDestino = File.Open(caminhoArquivoDestinoTest, FileMode.OpenOrCreate);
                     arquivoDestino.Close();
 
@@ -591,11 +598,11 @@ namespace WindowsFormsApplication1
 
                     //var fileCounter = 0;
 
-
+                    // pecorrer a lista de training
                     for (k = 0; k < treino.Count; k++)
                     {
 
-
+                        // pego o arquivo na 1 posição da lista de training ler as linhas desse arquivo e escreve no arquivo de training no caminho destino
                         arquivoselecionado = treino[k];
 
 
