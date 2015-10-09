@@ -25,8 +25,7 @@ namespace ConsoleApplication2
         public int contadorporcento = 0;
         public int flag = 0;
 
-
-
+       
         public void Abrir()
 
         {
@@ -72,8 +71,7 @@ namespace ConsoleApplication2
 
         }
 
-
-
+      
 
         private void Concatenar()
 
@@ -117,9 +115,7 @@ namespace ConsoleApplication2
 
         }
 
-
-
-
+        
         private void btnAlterar_Click(object sender, EventArgs e)
         {
             Alterar(10);
@@ -414,20 +410,18 @@ namespace ConsoleApplication2
                 } while (testSet.Count != tamTrainingSet);
 
 
-
-                // Console.Write(" agora o training ");
                 foreach (int training in totalSet)
                 {
 
-                    // Console.Write(" " + training);
+                   
                 }
                 treino = totalSet.ToList();
 
-                // Console.Write(" agora o test ");
+                
                 foreach (int test in testSet)
                 {
 
-                    //Console.Write(" " + test);
+                   
 
                     totalSet.Add(test);
                 }
@@ -475,7 +469,6 @@ namespace ConsoleApplication2
                         File.Move(caminhoArquivoDestinoTest, destinoTest);
 
                 }
-
 
 
                 // gerar treino
