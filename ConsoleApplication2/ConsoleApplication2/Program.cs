@@ -66,7 +66,7 @@ namespace ConsoleApplication2
 
             {
 
-                //MessageBox.Show(ex.Message);
+
 
             }
 
@@ -78,10 +78,6 @@ namespace ConsoleApplication2
         private void Concatenar()
 
         {
-            //string diretorio = @"C:\Users\Bruno\Downloads\kfolds";
-            //string caminhoArquivoDestino = @"C:\Users\Bruno\Downloads\kfolds\Data_Default.txt";
-
-
 
 
             String[] listaDeArquivos = Directory.GetFiles(diretorio);
@@ -102,27 +98,27 @@ namespace ConsoleApplication2
 
                 File.WriteAllLines(strPathFile, linhasDestino.ToArray());
                 System.Console.WriteLine("Arquivo atualizado!");
-                //ExcluirKfolds();
+
                 int numero = 1;
                 for (; numero <= 10; numero++)
                     File.Delete(@"C:\Users\smart\Downloads\kfolds\Kfold-parte-" + numero + ".txt");
 
             }
-            //Exibo a mensagem que o arquivo foi atualizado                      
+
 
             else
 
             {
                 //Se não existir exibo a mensagem
 
-               System.Console.WriteLine("Arquivo não encontrado!");
+                System.Console.WriteLine("Arquivo não encontrado!");
 
             }
 
         }
 
 
-       
+
 
         private void btnAlterar_Click(object sender, EventArgs e)
         {
@@ -135,7 +131,7 @@ namespace ConsoleApplication2
             try
 
             {
-                //  int valorNum1 = int.Parse(textBox1.Text);
+
                 linhasporarquivo = valorNum1;
                 //Verifico se o arquivo que desejo abrir existe e passo como parâmetro a variável respectiva
 
@@ -287,7 +283,6 @@ namespace ConsoleApplication2
 
                 {
 
-                    //Se não existir exibo a mensagem
 
                     System.Console.WriteLine("Arquivo não encontrado!");
 
@@ -358,7 +353,7 @@ namespace ConsoleApplication2
 
             {
 
-               System.Console.WriteLine(ex.Message);
+                System.Console.WriteLine(ex.Message);
 
             }
 
@@ -420,15 +415,15 @@ namespace ConsoleApplication2
 
 
 
-               // Console.Write(" agora o training ");
+                // Console.Write(" agora o training ");
                 foreach (int training in totalSet)
                 {
 
-                   // Console.Write(" " + training);
+                    // Console.Write(" " + training);
                 }
                 treino = totalSet.ToList();
 
-               // Console.Write(" agora o test ");
+                // Console.Write(" agora o test ");
                 foreach (int test in testSet)
                 {
 
@@ -548,34 +543,32 @@ namespace ConsoleApplication2
 
                 switch (op)
                 {
-                        case 1:
+                    case 1:
                         Console.Clear();
 
                         c2.Abrir(); break;
-                
 
-                        case 2:
+
+                    case 2:
                         Console.Clear();
 
                         c2.Concatenar(); break;
 
 
-                        case 3:
+                    case 3:
                         Console.Clear();
 
                         c2.Alterar(10); break;
 
-                        case 4:
+                    case 4:
                         Console.Clear();
 
-                        c2.gerarTestTrainingSet(10,20); break;
+                        c2.gerarTestTrainingSet(10, 20); break;
                 }
-                //Console.Clear();
+               
 
-            } while (op!= 0);
-            //c2.Abrir();
-           // c2.Concatenar();
-            //Console.ReadKey();
+            } while (op != 0);
+            
         }
     }
 }
