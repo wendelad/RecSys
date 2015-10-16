@@ -18,3 +18,8 @@ C:\Users\Bruno\Desktop\novo codigo\RecSys\GeneticAlgorithm\bin\Debug\GeneticAlgo
 C:\Users\Bruno\Desktop\novo codigo\RecSys\GeneticAlgorithm\obj\Debug\GeneticAlgorithm.csprojResolveAssemblyReference.cache
 C:\Users\Bruno\Desktop\novo codigo\RecSys\GeneticAlgorithm\obj\Debug\GeneticAlgorithm.dll
 C:\Users\Bruno\Desktop\novo codigo\RecSys\GeneticAlgorithm\obj\Debug\GeneticAlgorithm.pdb
+C:\Users\smart\Desktop\RecSys-master (3)\RecSys-master\GeneticAlgorithm\bin\Debug\GeneticAlgorithm.dll
+C:\Users\smart\Desktop\RecSys-master (3)\RecSys-master\GeneticAlgorithm\bin\Debug\GeneticAlgorithm.pdb
+C:\Users\smart\Desktop\RecSys-master (3)\RecSys-master\GeneticAlgorithm\obj\Debug\GeneticAlgorithm.csprojResolveAssemblyReference.cache
+C:\Users\smart\Desktop\RecSys-master (3)\RecSys-master\GeneticAlgorithm\obj\Debug\GeneticAlgorithm.dll
+C:\Users\smart\Desktop\RecSys-master (3)\RecSys-master\GeneticAlgorithm\obj\Debug\GeneticAlgorithm.pdb
